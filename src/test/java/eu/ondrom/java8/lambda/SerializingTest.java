@@ -10,7 +10,7 @@ import java.io.Serializable;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-public class Serializing {
+public class SerializingTest {
     
     public static interface SerializableRunnable extends Runnable, Serializable {
     }
@@ -36,10 +36,13 @@ public class Serializing {
 
     @Test
     public void anyLambdaExprCanBeMadeSerializable() throws IOException, ClassNotFoundException {
-        SerializableRunnable sr = () -> System.out.println("Serializable!");
-        givenLambdaCanBeSerialized(sr);
+        givenSerializableLambdaCanBeSerialized(() -> System.out.println("Serializable!"));
     }
-
+    
+    private void givenSerializableLambdaCanBeSerialized(SerializableRunnable r) throws ClassNotFoundException, IOException {
+        givenLambdaCanBeSerialized(r);
+    }
+    
     private void givenLambdaCanBeSerialized(Runnable r) throws ClassNotFoundException, IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         new ObjectOutputStream(out).writeObject(r);
@@ -49,6 +52,6 @@ public class Serializing {
     }
     
     public static void main(String[] args) throws Exception {
-        new Serializing().serializableLambdaCanBeSerialized();
+        new SerializingTest().serializableLambdaCanBeSerialized();
     }
 }
