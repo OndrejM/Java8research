@@ -34,12 +34,20 @@ public class Observable<T> {
     }
     
     public synchronized void publish(T value) {
+        System.out.println("Publish");
+        System.out.flush();
         publishedValue = value;
         observers.stream().forEach(observer -> {
             Iterator<?> it = (Iterator)observer[0];
             Consumer<Object> c = (Consumer)observer[1];
-            if (it.hasNext()) {
-                c.accept(it.next());
+        System.out.println("hasNext");
+        System.out.flush();
+            if (it.hasNext()) { 
+  // !!! hasNext/next is blocking until new value arrives - if no values in pipeline (e.g. due to filtering), blocks infinitely
+                final Object val = it.next();
+        System.out.println("next: " + val);
+        System.out.flush();
+                c.accept(val);
             }
         });
     }

@@ -2,9 +2,10 @@ package eu.ondrom.java8.rx;
 
 import java.util.stream.IntStream;
 import static org.hamcrest.CoreMatchers.*;
-import org.junit.Test;
+import org.junit.*;
 import static org.junit.Assert.*;
 
+@Ignore
 public class ObservableStreamPOCTest {
     
     public ObservableStreamPOCTest() {
@@ -12,6 +13,12 @@ public class ObservableStreamPOCTest {
 
     private int numberOfObserved;
     
+    /* Result - not possible
+       Reason: because Streams are pulling, where the activity comes from the receiver side, 
+    receiver may block while not knowing whether there are values in the pipeline. 
+    Streams API is only blocking, there is no way to listen on new values.
+    That leads to this behavior: Do we have something? Yes -> do something with it. No -> wait until something is there.
+    */
     @Test
     public void canObserveWithJavaStreams() {
         
@@ -20,8 +27,9 @@ public class ObservableStreamPOCTest {
         Observable<Integer> ob = Observable.get();
         
         ob.observe(ob.getStream()
-              .limit(100)
-              .filter(i -> i % 2 == 0), 
+//              .limit(10000)
+              .filter(i -> i < 50)
+                , 
             this::observeEvent);
         
         publishEvents(ob, 100);
