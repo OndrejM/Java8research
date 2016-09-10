@@ -20,7 +20,7 @@ public class LambdaDefaultMethodsTest {
         };
         operator = operator.andThen(x -> x + "!");
         String result = runFunction(operator);
-        assertEquals("After operator applied", "AB", result);
+        assertEquals("After operator applied", "AB!", result);
     }
     
     private String runFunction(BiFunction<String, String, String> o) {
